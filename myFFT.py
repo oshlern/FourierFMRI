@@ -34,9 +34,9 @@ def fft(x):
       return x
    Feven, Fodd = fft(x[0::2]), fft(x[1::2])
    combined = [0] * n
-   for m in xrange(n/2):
+   for m in range(int(n/2)):
      combined[m] = Feven[m] + omega(n, -m) * Fodd[m]
-     combined[m + n/2] = Feven[m] - omega(n, -m) * Fodd[m]
+     combined[m + int(n/2)] = Feven[m] - omega(n, -m) * Fodd[m]
    return combined
 
 def ifft(X):

@@ -1,10 +1,10 @@
 from myFFT import *
 import numpy as np
-print 'Testing for 1-d signals'
+print('Testing for 1-d signals')
 # Generating sin curve in range [-2p, 2pi] with 128 sample points
 f = np.sin(np.linspace(-2*np.pi,2*np.pi,128))
 # let us add some noise with mean 0.5 and sigma 0.75
-f = f + 0.75 * np.random.rand(128) + 0.5
+f = f + 1 * np.random.rand(128) + 0.5
 F = fft(f)
 import pylab as plt
 fig = plt.figure()
@@ -19,10 +19,10 @@ plt.plot(np.angle(F[:64]))
 plt.title('Phase plot')
 plt.show()
 
-print '\ntesting for 2-d signals/images'
+print('\ntesting for 2-d signals/images')
 x = np.matrix([[1,2,1],[2,1,2],[0,1,1]])
 X, m, n = fft2(x)
-print '\nDFT is :'
-print X
-print '\nOriginal signal is :'
-print ifft2(X, m, n)
+print('\nDFT is :')
+print(X)
+print('\nOriginal signal is :')
+print(ifft2(X, m, n))

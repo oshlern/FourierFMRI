@@ -15,6 +15,7 @@ for _ in range(32):
 # takes in vector of values through time
 # returns vector amplitudes through frequencies
 def fourier(data):
+    waves = [(amp, freq) for amp, freq in zip(sorted_amps, sorted_freqs)[:5]]
     return
 
 ROI_freqs = [fourier(ROI) for ROI in ROI_data]
