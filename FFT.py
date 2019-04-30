@@ -1,5 +1,7 @@
 # FFT Definition
 
+import numpy as np
+
 def Fourier(subjects): # I: subject * time * ROI
     subject_fft = []
     for timeset in subjects:
