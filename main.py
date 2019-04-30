@@ -16,7 +16,6 @@ for _ in range(32):
 # returns vector amplitudes through frequencies
 
 def fourier(data):
-
     # O: {freq: z}
     # |z| = amplitude of wave np.abs()
     # angle(z) = phase shift np.angle()
@@ -24,7 +23,7 @@ def fourier(data):
     F = {} # FOURIER RESULT
 
     #waves = [(amp, freq) for amp, freq in zip(sorted_amps, sorted_freqs)[:5]]
-    wave = [(amp,freq, shift) for ]
+    wave = [(amp, freq, shift) for amp, freq, shift in map(F, lambda data: (np.abs(data[1]) data[0], np.angle(data[1])))]
     return
 
 ROI_freqs = [fourier(ROI) for ROI in ROI_data]
