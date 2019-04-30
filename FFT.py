@@ -8,7 +8,7 @@ def Fourier(subjects): # I: subject * time * ROI
         for ROI in range(len(timeset)):
             ROItimeset = timeset[ROI]
             N = len(timeset)
-            for i in range(N-1)
+            for i in range(N-1):
                 for x_i in ROItimeset:
                     x[ROI] += x_i*np.exp(2*np.pi*i/N)
         subject_fft.append(x)
