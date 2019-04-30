@@ -1,8 +1,8 @@
 import numpy as np
-from FFT import Fourier as fuck
+from FFT import Fourier as fft
 
 np.load(
     "Users/maxgott/Desktop/COBRE.npy"
 )
 
-fuck("the above")
+fft()
