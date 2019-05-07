@@ -1,17 +1,18 @@
-# FFT Definition
-
+# FFT Function
 import numpy as np
 
-def Fourier(subjects): # I: subject * time * ROI
+def Discrete(subjects): # I: [subject * [time * [ROI]]]
     subject_fft = []
-    for timeset in subjects:
-        np.transpose(timeset)
-        x = [0 for i in range(len(timeset))]
-        for ROI in range(len(timeset)):
-            ROItimeset = timeset[ROI]
-            N = len(timeset)
-            for i in range(N-1):
-                for x_i in ROItimeset:
-                    x[ROI] += x_i*np.exp(2*np.pi*i/N)
-        subject_fft.append(x)
+    for subject in subjects:
+        np.transpose(subject) # Convert to [ROI * [timeset]]
+        ListFreqROI = []
+        for ROI in subject:
+            N = len(ROI)
+            X = [0 for k in range(N-1)]
+            for k in range(N-1):
+                for n in range(N-1):
+                    X[n] += ROI[n] * np.exp(2*np.pi*k*n/N)
+            ListFreqROI.append(X)
+        subject_fft.append(ListFreqROI)
     return subject_fft
+
