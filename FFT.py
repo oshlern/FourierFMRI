@@ -17,4 +17,3 @@ def Discrete(subjects): # I: [subject * [time * [ROI]]]
     return subject_fft
 
 sin_values = np.sin([0, math.pi / 2, np.pi / 3, np.pi])
-print(Discrete([sin_values]))
