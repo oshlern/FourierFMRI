@@ -30,8 +30,8 @@ def DFT(x, N=10): # x is the data, N is buckets... I wrote it like this to bette
 def convertToMagPhase(freqs, d=2):
     new = []
     perc = 10 ** d
-    for i in range(len(freqs[0][0])):
-        mag, phase = np.abs(freqs[0][0][i]), np.angle(freqs[0][0][i])
+    for i in range(len(freqs)):
+        mag, phase = np.abs(freqs[i]), np.angle(freqs[i])
         if mag > 0.001:
             pass#print(i, mag, phase)
         new.append((i, (int(mag*perc)/perc, int(phase*perc)/perc)))
