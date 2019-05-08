@@ -18,8 +18,12 @@ import matplotlib.pyplot as mpl
 #         subject_fft.append(ListFreqROI)
 #     return subject_fft
 
-def DFT(data, buckets=10):
-    pass
+def DFT(x, N=10): # x is the data, N is buckets... I wrote it like this to better mimic the standard DFT equation notation
+    X = np.arange(N)*0
+    for n in range(N):
+        for k in range(len(x)): # k is a discrete timestep variable, data[k] is the data at this point
+            X[n] += x[k] * np.exp(-1j*2*np.pi*k*n/N) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
+    return X
 
 def convertToMagPhase(freqs, d=2):
     try:
@@ -54,14 +58,14 @@ sin = np.sin(t * (2*np.pi/period) + phase)
 
 #print(t)
 #print(sin)
-#print("\"", Final([[sin]]), "\"")
-for i in Final([[sin]])[0][0]:
+#print("\"", DFT([[sin]]), "\"")
+for i in DFT(sin):
     print(np.abs(i))
 
 
 ## PLOT ##
 #x = np.linspace(0, 10, 100)
-dft_results = convert(Final([[sin]]))
+dft_results = convert(DFT(sin))
 
 # Plot the data
 mpl.plot(t, sin, label='sin')
@@ -72,4 +76,4 @@ mpl.plot(t, convert(npf.fft(sin)), label="np.fft")
 mpl.legend()
 
 # Show the plot
-#mpl.show()
+mpl.show()
