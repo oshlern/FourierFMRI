@@ -1,5 +1,4 @@
-# FFT Definition
-
+# FFT Function
 import numpy as np
 
 # def Fourier(subjects): # I: subject * time * ROI
@@ -89,6 +88,7 @@ sin = np.sin(t * (2*np.pi/period) + phase)
 
 print(t)
 print(sin)
+<<<<<<< HEAD
 
 
 freqs = fft(sin)
@@ -103,3 +103,6 @@ for ind, (s,i) in enumerate(zip(sin, inv)):
         print(ind, s, i)
 # convert(fft(sin))
 # print(convert(fft(sin)))
+=======
+print(convert(fft(sin)))
+>>>>>>> 5fe8ed1fa0b600ee3b66f3f795d41264cd3ebaaf
