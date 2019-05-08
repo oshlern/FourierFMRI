@@ -1,4 +1,4 @@
-# DFT Function
+# DFT Functions
 import numpy as np
 import matplotlib.pyplot as mpl
 
