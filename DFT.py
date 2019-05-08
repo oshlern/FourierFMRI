@@ -3,20 +3,23 @@ import numpy as np
 import numpy.fft as npf
 import matplotlib.pyplot as mpl
 
-def Final(subjects): # I: [subject * [time * [ROI]]]
-    subject_fft = []
-    for subject in subjects:
-        np.transpose(subject) # Convert to [ROI * [timeset]]
-        ListFreqROI = []
-        for ROI in subject:
-            N = len(ROI)
-            X = [0 for k in range(N-1)]
-            for k in range(N-1):
-                for n in range(N-1):
-                    X[n] += ROI[n] * np.exp(2*np.pi*k*n*1j/N)
-            ListFreqROI.append(X)
-        subject_fft.append(ListFreqROI)
-    return subject_fft
+# def Final(subjects): # I: [subject * [time * [ROI]]]
+#     subject_fft = []
+#     for subject in subjects:
+#         np.transpose(subject) # Convert to [ROI * [timeset]]
+#         ListFreqROI = []
+#         for ROI in subject:
+#             N = len(ROI)
+#             X = [0 for k in range(N-1)]
+#             for k in range(N-1):
+#                 for n in range(N-1):
+#                     X[n] += ROI[n] * np.exp(-2*np.pi*k*n*1j/N)
+#             ListFreqROI.append(X)
+#         subject_fft.append(ListFreqROI)
+#     return subject_fft
+
+def DFT(data, buckets=10):
+    pass
 
 def convertToMagPhase(freqs, d=2):
     try:
