@@ -42,7 +42,7 @@ def fft(data): # given list of values find dft
 
     freqs = [0]*(2*N2)
     for freq in range(N2):
-        w = np.exp(1j*2*np.pi/N*freq)
+        w = np.exp(-1j*np.pi/N2*freq)
         freqs[freq] = even_freqs[freq] + w * odd_freqs[freq]
         freqs[freq + N2] = even_freqs[freq] - w * odd_freqs[freq]
         # freqs[freq] = np.add(even_freqs, np.multiply(w, odd_freqs))
@@ -50,10 +50,11 @@ def fft(data): # given list of values find dft
 
     if extra_term:
         # N-1 is the freq, which is 2*N2 so the inner powers cancel to 1 and is thus a sum
-        freqs.append(sum(even_data) + np.exp(1j*2*np.pi/N*(N-1)) * sum(odd_data))
+        # freqs.append(sum(even_data) + np.exp(-1j*2*np.pi/N*(N-1)) * sum(odd_data))
+        freqs.append(sum([data[i] * np.exp(-1j*2*np.pi*i/N*(N-1)) for i in range(N-1)]))
 
         for freq in range(N):
-            freqs[freq] += data[N-1]*np.exp(1j*2*np.pi*(N-1)/N*freq)
+            freqs[freq] += data[N-1]*np.exp(-1j*2*np.pi*(N-1)/N*freq)
 
     return freqs
 
@@ -62,10 +63,19 @@ def convert(freqs, d=2):
     perc = 10 ** d
     for i in range(len(freqs)):
         mag, phase = np.abs(freqs[i]), np.angle(freqs[i])
-        if mag > 0.001:
+        if mag > 0.002:
             print(i, mag, phase)
-        new.append((i, (int(mag*perc)/perc, int(phase*perc)/perc)))
+        new.append((i, (int(mag*perc)/perc), int(phase*perc)/perc))
     return new
+
+def inverse_DFT(freqs):
+    time_data = []
+    N = len(freqs)
+    for i in range(N):
+        x = sum([freqs[j] * np.exp(1j*2*np.pi*j/N*i) for j in range(N)])
+        time_data.append(x/N)
+    return time_data
+
 
 
 # freq is the number of cycles in the whole data set (0 = constant, N/2 = oscilate every other data-point)
@@ -79,4 +89,17 @@ sin = np.sin(t * (2*np.pi/period) + phase)
 
 print(t)
 print(sin)
-print(convert(fft(sin)))
+
+
+freqs = fft(sin)
+inv = np.real(inverse_DFT(freqs))
+
+# print(convert(freqs))
+
+print(inv)
+
+for ind, (s,i) in enumerate(zip(sin, inv)):
+    if np.abs(s-i) > 0.03:
+        print(ind, s, i)
+# convert(fft(sin))
+# print(convert(fft(sin)))
