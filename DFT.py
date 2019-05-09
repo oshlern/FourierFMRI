@@ -11,13 +11,27 @@ def add(list1, list2):
     return list3
 
 def DFT(x, N=10): # x is the data, N is buckets... I wrote it like this to better mimic the standard DFT equation notation
+    N = len(x)
     X = np.arange(N)*0
     for n in range(N):
         # Loop through to define each X_n 
         for k in range(len(x)): # k is a discrete timestep variable, data[k] is the data at this point
             # For some X_n, sum up the value for each time step k
-            X[n] += x[k] * np.exp(-1j*2*np.pi*k*n/N) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
+            X[n] = X[n] + np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N)) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
+            print(X[n], np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N)), X[n] + np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N)))
+
     return X
+
+def dft(data):
+    N = len(data)
+    freqs = []
+    for k in range(N):
+        x = sum([data[i] * np.exp(-1j*2*np.pi*i/N*k) for i in range(N)])
+        freqs.append(x)
+    return freqs
+
+def dft(data, N):
+    return [sum([data[i] * np.exp(-1j*2*np.pi*i/N*k) for i in range(N)]) for k in range(N)]
 
 def convertToMagPhase(freqs, d=2):
     new = []
@@ -41,6 +55,14 @@ def convertToSin(freqs):
 
 def convert(freqs): return convertToSin(convertToMagPhase(freqs))
 
+def inverse_DFT(freqs):
+    time_data = []
+    N = len(freqs)
+    for i in range(N):
+        x = sum([freqs[j] * np.exp(1j*2*np.pi*j/N*i) for j in range(N)])
+        time_data.append(x/N)
+    return time_data
+
 
 ## PLOT ##
 n = 5
@@ -59,9 +81,17 @@ for i in DFT(TestData):
     print("freq", i, "-- -- -- mag", np.abs(i), "-- -- -- arg", np.angle(i))
 
 # Plot the data
-mpl.plot(t, TestData, label='sin')
-mpl.plot(t, convert(DFT(TestData)), label="dft")
-mpl.plot(t, convert(npf.fft(TestData)), label="np.fft")
+print(TestData)
+
+print(DFT(TestData))
+print(dft(TestData))
+print(npf.fft(TestData))
+print(inverse_DFT(DFT(TestData)))
+print(inverse_DFT(dft(TestData)))
+print(inverse_DFT(npf.fft(TestData)))
+# mpl.plot(t, TestData, label='sin')
+# mpl.plot(t, inverse_DFT(DFT(TestData)), label="dft")
+# mpl.plot(t, inverse_DFT(npf.fft(TestData)), label="np.fft")
 
 # Add a legend
 mpl.legend()
