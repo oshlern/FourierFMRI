@@ -1,21 +1,6 @@
 # FFT Function
 import numpy as np
 
-# def Fourier(subjects): # I: subject * time * ROI
-#     subject_fft = []
-#     for timeset in subjects:
-#         np.transpose(timeset)
-#         x = [0 for i in range(len(timeset))]
-#         for ROI in range(len(timeset)):
-#             ROItimeset = timeset[ROI]
-#             N = len(timeset)
-#             for i in range(N-1):
-#                 for x_i in ROItimeset:
-#                     x[ROI] += x_i*np.exp(2*np.pi*i/N)
-#         subject_fft.append(x)
-#     return subject_fft
-
-
 
 def fft(data): # given list of values find dft
     N = len(data)
@@ -38,6 +23,7 @@ def fft(data): # given list of values find dft
 
     even_freqs = fft(even_data)
     odd_freqs = fft(odd_data)
+    print("--------------")
 
     freqs = [0]*(2*N2)
     for freq in range(N2):
@@ -46,6 +32,8 @@ def fft(data): # given list of values find dft
         freqs[freq + N2] = even_freqs[freq] - w * odd_freqs[freq]
         # freqs[freq] = np.add(even_freqs, np.multiply(w, odd_freqs))
         # freqs[freq + N2] = np.subtract(even_freqs, np.multiply(w, odd_freqs))
+
+    # extra_term = False
 
     if extra_term:
         # N-1 is the freq, which is 2*N2 so the inner powers cancel to 1 and is thus a sum
@@ -112,19 +100,21 @@ inv = np.real(inverse_DFT(freqs))
 freqs2 = dft(sin)
 inv2 = np.real(inverse_DFT(freqs2))
 
+true_freqs = np.fft.fft(sin)
+true_inv = np.real(inverse_DFT(true_freqs))
 # print(convert(freqs))
 
 print(inv)
 print(inv2)
 
 for i in range(len(freqs)):
-    print(i, round(freqs[i],4), round(freqs2[i],4))
+    print(i, round(freqs[i],4), round(freqs2[i],4))#, round(true_freqs[i],4))
 # print(freqs2)
 
-for ind, (s,i,i2) in enumerate(zip(sin, inv, inv2)):
-    if np.abs(s-i) > 0.03:
-        print(ind, s, i)
-    if np.abs(s-i2) > 0.03:
-        print("_", ind, s, i2)
+# for ind, (s,i,i2) in enumerate(zip(sin, inv, inv2)):
+#     if np.abs(s-i) > 0.03:
+#         print(ind, s, i)
+#     if np.abs(s-i2) > 0.03:
+#         print("_", ind, s, i2)
 # convert(fft(sin))
 # print(convert(fft(sin)))
