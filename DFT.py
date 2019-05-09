@@ -2,6 +2,7 @@
 import numpy as np
 import numpy.fft as npf
 import matplotlib.pyplot as mpl
+from random import randint
 
 def add(list1, list2):
     if len(list1) != len(list2): raise IndexError("WTF")
@@ -16,7 +17,7 @@ def DFT(x, N=10): # x is the data, N is buckets... I wrote it like this to bette
         # Loop through to define each X_n 
         for k in range(len(x)): # k is a discrete timestep variable, data[k] is the data at this point
             # For some X_n, sum up the value for each time step k
-            X[n] += x[k] * np.exp(-1j*2*np.pi*k*n/N) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
+            X[n] += np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N)) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
     return X
 
 def convertToMagPhase(freqs, d=2):
@@ -26,24 +27,25 @@ def convertToMagPhase(freqs, d=2):
         mag, phase = np.abs(freqs[i]), np.angle(freqs[i])
         if mag > 0.001:
             pass#print(i, mag, phase)
-        new.append((i, int(mag*perc)/perc, int(phase*perc)/perc))
+        new.append((i+1, int(mag*perc)/perc, int(phase*perc)/perc))
     return new # O: (freq, mag, arg)
 
-def convertToSin(freqs):
+def convertToSin(freqs, printval=False):
     t = np.arange(n)
     sin = np.sin(t * 0)
     for i in freqs:
-        sin0 = i[1]*np.sin(t * (i[0]/(2*np.pi*n)) + i[2])
+        sin0 = np.multiply(i[1],np.sin(t * (i[0]*n/(2*np.pi)) + i[2]))
         sin = add(sin, sin0)
-        print("~",sin)
-    print("\"",freqs[0])
+        if printval: print("~",sin)
+    if printval: print("\"",freqs[0])
     return sin
 
 def convert(freqs): return convertToSin(convertToMagPhase(freqs))
 
 
 ## PLOT ##
-n = 5
+n = 16#randint(10,40)
+print("n",n)
 t = np.arange(n)
 
 period = 8
@@ -52,19 +54,24 @@ phase = 0
 sin1 = np.sin(t * (2*np.pi/period) + phase)
 sin2 = np.sin(t * (2*np.pi/(2*period)) + phase)
 sin3 = np.sin(t * (2*np.pi/(3*period)) + phase)
-TestData = sin1#add(add(sin1, sin2), sin3)
+TestData = add(add(sin1, sin2), sin3)
 
 # Print the data
-for i in DFT(TestData):
-    print("freq", i, "-- -- -- mag", np.abs(i), "-- -- -- arg", np.angle(i))
+dft_calc = DFT(TestData)
+for i in range(len(dft_calc)):
+    print("freq", i, "-- -- -- mag", np.abs(dft_calc[i]), "-- -- -- arg", np.angle(dft_calc[i]))
 
 # Plot the data
-mpl.plot(t, TestData, label='sin')
-mpl.plot(t, convert(DFT(TestData)), label="dft")
+# mpl.plot(t, TestData, label='sin')
+mpl.plot(t, convert(dft_calc), label="dft")
 mpl.plot(t, convert(npf.fft(TestData)), label="np.fft")
+
+# for i in convertToMagPhase(dft_calc):
+#     sin0 = np.multiply(i[1],np.sin(t * (n/(2*np.pi*i[0])) + i[2]))
+#     if i[1] != 0: mpl.plot(t, sin0, label=("sin"+str(i)))
 
 # Add a legend
 mpl.legend()
 
 # Show the plot
-#mpl.show()
+mpl.show()
