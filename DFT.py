@@ -11,14 +11,24 @@ def add(list1, list2):
         list3[i] = list1[i] + list2[i]
     return list3
 
-def DFT(x, N=10): # x is the data, N is buckets... I wrote it like this to better mimic the standard DFT equation notation
-    X = np.arange(N)*0
+def minus(list1, list2): return add(list1, -1*list2)
+
+def DFT(x, N=10): # x is the signal, N is buckets... I wrote it like this to better mimic the standard DFT equation notation
+    X = [0 for i in range(N)]
     for n in range(N):
         # Loop through to define each X_n 
         for k in range(len(x)): # k is a discrete timestep variable, data[k] is the data at this point
             # For some X_n, sum up the value for each time step k
-            X[n] += np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N)) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
+            X[n] = np.add(X[n],np.multiply(x[k], np.exp(-1j*2*np.pi*k*n/N))) # \sum_{k=0}^{M-1} x_k^{-i\frac{2pi}{N}\cdot kn} where M is the length of the signal
     return X
+
+def Osher_dft(data):
+    N = len(data)
+    freqs = []
+    for k in range(N):
+        x = sum([data[i] * np.exp(-1j*2*np.pi*i/N*k) for i in range(N)])
+        freqs.append(x)
+    return freqs
 
 def convertToMagPhase(freqs, d=2):
     new = []
@@ -44,7 +54,7 @@ def convert(freqs): return convertToSin(convertToMagPhase(freqs))
 
 
 ## PLOT ##
-n = 16#randint(10,40)
+n = randint(10,40)
 print("n",n)
 t = np.arange(n)
 
@@ -57,14 +67,17 @@ sin3 = np.sin(t * (2*np.pi/(3*period)) + phase)
 TestData = add(add(sin1, sin2), sin3)
 
 # Print the data
-dft_calc = DFT(TestData)
+dft_calc2 = Osher_dft(TestData)
+dft_calc = DFT(TestData, len(TestData))
 for i in range(len(dft_calc)):
     print("freq", i, "-- -- -- mag", np.abs(dft_calc[i]), "-- -- -- arg", np.angle(dft_calc[i]))
 
 # Plot the data
 # mpl.plot(t, TestData, label='sin')
 mpl.plot(t, convert(dft_calc), label="dft")
+mpl.plot(t, convert(dft_calc2), label="dft2")
 mpl.plot(t, convert(npf.fft(TestData)), label="np.fft")
+# mpl.plot(t, minus(convert(dft_calc),convert(npf.fft(TestData))), label="dft - np.fft")
 
 # for i in convertToMagPhase(dft_calc):
 #     sin0 = np.multiply(i[1],np.sin(t * (n/(2*np.pi*i[0])) + i[2]))
