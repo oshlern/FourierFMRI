@@ -52,7 +52,7 @@ phase = 0
 sin1 = np.sin(t * (2*np.pi/period) + phase)
 sin2 = np.sin(t * (2*np.pi/(2*period)) + phase)
 sin3 = np.sin(t * (2*np.pi/(3*period)) + phase)
-TestData = add(add(sin1, sin2), sin3)
+TestData = sin1#add(add(sin1, sin2), sin3)
 
 # Print the data
 for i in DFT(TestData):
@@ -67,4 +67,4 @@ mpl.plot(t, convert(npf.fft(TestData)), label="np.fft")
 mpl.legend()
 
 # Show the plot
-mpl.show()
+#mpl.show()
