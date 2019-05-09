@@ -26,14 +26,14 @@ def convertToMagPhase(freqs, d=2):
         mag, phase = np.abs(freqs[i]), np.angle(freqs[i])
         if mag > 0.001:
             pass#print(i, mag, phase)
-        new.append((i, (int(mag*perc)/perc, int(phase*perc)/perc)))
-    return new # O: (freq, (mag, arg))
+        new.append((i, int(mag*perc)/perc, int(phase*perc)/perc))
+    return new # O: (freq, mag, arg)
 
 def convertToSin(freqs):
     t = np.arange(n)
     sin = np.sin(t * 0)
     for i in freqs:
-        sin0 = i[1][0]*np.sin(t * (i[0]/(2*np.pi*n)) + i[1][0])
+        sin0 = i[1]*np.sin(t * (i[0]/(2*np.pi*n)) + i[2])
         sin = add(sin, sin0)
         print("~",sin)
     print("\"",freqs[0])
