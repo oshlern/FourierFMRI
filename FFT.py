@@ -50,11 +50,27 @@ def fft(data): # given list of values find dft
     if extra_term:
         # N-1 is the freq, which is 2*N2 so the inner powers cancel to 1 and is thus a sum
         # freqs.append(sum(even_data) + np.exp(-1j*2*np.pi/N*(N-1)) * sum(odd_data))
-        freqs.append(sum([data[i] * np.exp(-1j*2*np.pi*i/N*(N-1)) for i in range(N-1)]))
+        # freqs.append()
 
-        for freq in range(N):
-            freqs[freq] += data[N-1]*np.exp(-1j*2*np.pi*(N-1)/N*freq)
+        for freq in range(N-1):
+            print(round(freqs[freq], 3))
+            freqs[freq] = freqs[freq] + data[N-1]*np.exp(-1j*2*np.pi*(N-1)/N*freq)
+            print(round(data[N-1]*np.exp(-1j*2*np.pi*(N-1)/N*freq), 3))
+            print(round(freqs[freq], 3))
+            print(freq)
 
+        last_freq = sum([data[i] * np.exp(-1j*2*np.pi*i/N*(N-1)) for i in range(N)])
+        print(last_freq, np.exp(-1j*2*np.pi/N*(N-1)))
+        freqs.append(last_freq)
+
+    return freqs
+
+def dft(data):
+    N = len(data)
+    freqs = []
+    for k in range(N):
+        x = sum([data[i] * np.exp(-1j*2*np.pi*i/N*k) for i in range(N)])
+        freqs.append(x)
     return freqs
 
 def convert(freqs, d=2):
@@ -79,30 +95,36 @@ def inverse_DFT(freqs):
 
 # freq is the number of cycles in the whole data set (0 = constant, N/2 = oscilate every other data-point)
 
-n = 16
+n = 17
 
 period = 8
-phase = 0
+phase = 1
 t = np.arange(n)
 sin = np.sin(t * (2*np.pi/period) + phase)
 
 print(t)
 print(sin)
-<<<<<<< HEAD
 
 
 freqs = fft(sin)
 inv = np.real(inverse_DFT(freqs))
 
+freqs2 = dft(sin)
+inv2 = np.real(inverse_DFT(freqs2))
+
 # print(convert(freqs))
 
 print(inv)
+print(inv2)
 
-for ind, (s,i) in enumerate(zip(sin, inv)):
+for i in range(len(freqs)):
+    print(i, round(freqs[i],4), round(freqs2[i],4))
+# print(freqs2)
+
+for ind, (s,i,i2) in enumerate(zip(sin, inv, inv2)):
     if np.abs(s-i) > 0.03:
         print(ind, s, i)
+    if np.abs(s-i2) > 0.03:
+        print("_", ind, s, i2)
 # convert(fft(sin))
 # print(convert(fft(sin)))
-=======
-print(convert(fft(sin)))
->>>>>>> 5fe8ed1fa0b600ee3b66f3f795d41264cd3ebaaf
